@@ -110,13 +110,11 @@ return [
     'menu' => [
         'MENU',
         [
-            'text'        => 'Pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'file',
-            'label'       => 4,
-            'label_color' => 'success',
+            'text'        => 'Torneios',
+            'route'       => 'tournament.index',
+            'icon'        => 'soccer-ball-o',
         ],
-        'ACCOUNT SETTINGS',
+        /*'ACCOUNT SETTINGS',
         [
             'text' => 'Profile',
             'url'  => 'admin/settings',
@@ -126,7 +124,7 @@ return [
             'text' => 'Change Password',
             'url'  => 'admin/settings',
             'icon' => 'lock',
-        ],
+        ],*/
     ],
 
     /*
