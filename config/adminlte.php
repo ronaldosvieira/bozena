@@ -30,9 +30,9 @@ return [
     |
     */
 
-    'logo' => '<b>Bozena 🐕</b>',
+    'logo' => '<b>Bozena <span class="dog">🐕</span></b>',
 
-    'logo_mini' => '<b>🐕</b>',
+    'logo_mini' => '<b><span class="dog">🐕</span></b>',
 
     /*
     |--------------------------------------------------------------------------
