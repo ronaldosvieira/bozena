@@ -20,7 +20,7 @@
         <div class="box-body">
             @include('partials.session_message')
 
-            {{ Form::model($unidade,
+            {{ Form::model($tournament,
                 ['route' => ['tournament.update', $tournament->id],
                 'method' => 'patch',
                 'class' => 'form-horizontal']) }}

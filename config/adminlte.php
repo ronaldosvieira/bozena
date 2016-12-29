@@ -117,7 +117,7 @@ return [
         [
             'text'        => 'Torneios',
             'route'       => 'tournament.index',
-            'icon'        => 'soccer-ball-o',
+            'icon'        => 'sitemap',
         ],
     ],
 

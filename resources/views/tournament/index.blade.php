@@ -16,6 +16,13 @@
     <div class="box box-default">
         <div class="box-header with-border">
             <h3 class="box-title">Lista de torneios criados</h3>
+
+            <div class="pull-right">
+                <a href="{{ route('tournament.create') }}" class="btn btn-sm btn-success">
+                    <i class="fa fa-plus">&nbsp;</i>
+                    <span>Criar novo torneio</span>
+                </a>
+            </div>
         </div>
         <!-- /.box-header -->
 
@@ -34,27 +41,33 @@
                 <tbody>
                 @foreach($tournaments as $tournament)
                     <tr>
-                        <td>{{ $tournament->name }}</td>
                         <td>
-                            {{ $tournament->players->reduce(function($carry, $player) {
-                                return $carry . $player->name . " ";
-                            }) }}
+                            <a href="{{ route('tournament.show', $tournament->id) }}">
+                                {{ $tournament->name }}
+                            </a>
                         </td>
                         <td>
-                            <a href="{{ route('tournament.edit', $tournament->id) }}">
-                                <i class="material-icons md-black md-24 tooltip-edit">
-                                    &#xE150;
-                                </i>
+                            {{ join(", ", $tournament->players->map(function($player) {
+                                return $player->name;
+                            })->toArray()) }}
+                        </td>
+                        <td>
+                            <a href="{{ route('tournament.show', $tournament->id) }}" class="acao">
+                                <i class="fa fa-eye" data-toggle="tooltip"
+                                   data-placement="bottom" title="Ver informações"></i>
                             </a>
-                            {{-- Form::open(['method' => 'delete',
-                                'route' => ['usuario.destroy', $usuario->id],
-                                'class' => 'form-inline-destroy', 'data-nome' => $usuario->nome]) }}
-                                <a href="#" class="destroy">
-                                    <i class="material-icons md-black md-24 tooltip-destroy">
-                                        &#xE872;
-                                    </i>
-                                </a>
-                            {{ Form::close() --}}
+                            <a href="{{ route('tournament.edit', $tournament->id) }}" class="acao">
+                                <i class="fa fa-pencil" data-toggle="tooltip"
+                                   data-placement="bottom" title="Editar"></i>
+                            </a>
+                            {{--!! Form::open(['method' => 'delete',
+                                'route' => ['tournament.destroy', $tournament->id],
+                                'class' => 'form-destroy', 'data-nome' => $tournament->name]) !!}
+                            <a class="acao destroy" data-toggle="tooltip"
+                               data-placement="bottom" title="Excluir">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                            {!! Form::close() !!--}}
                         </td>
                     </tr>
                 @endforeach
@@ -71,3 +84,22 @@
     </div>
     <!-- /.box -->
 @stop
+
+@push('js')
+<script>
+    $(document).ready(function() {
+        $('.destroy').on('click', function() {
+            $(this).closest('form').submit();
+        });
+
+        $('.form-destroy').on("submit", function () {
+            if ($(this).find('.destroy').data('nome')) {
+                return confirm("Tem certeza que deseja excluir " +
+                    $(this).find('.destroy').data('nome') + "?");
+            } else {
+                return confirm("Tem certeza que deseja excluir?");
+            }
+        });
+    });
+</script>
+@endpush
