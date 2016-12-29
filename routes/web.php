@@ -12,11 +12,11 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return \Illuminate\Support\Facades\Redirect::route('tournament.index');
 });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
-
-Route::resource('tournament', 'TournamentController');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('tournament', 'TournamentController');
+});
