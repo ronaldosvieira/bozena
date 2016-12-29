@@ -15,6 +15,11 @@ Route::get('/', function () {
     return \Illuminate\Support\Facades\Redirect::route('tournament.index');
 });
 
+Route::post('tournament/{tournament}/activate', [
+    'as' => 'tournament.activate',
+    'uses' => 'TournamentController@activate'
+]);
+
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function() {

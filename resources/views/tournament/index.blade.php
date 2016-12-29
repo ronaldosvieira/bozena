@@ -35,7 +35,7 @@
                     <tr>
                         <th>Nome</th>
                         <th>Jogadores</th>
-                        <th>Estado</th>
+                        <th>Status</th>
                         <th>Ações</th>
                     </tr>
                 </thead>

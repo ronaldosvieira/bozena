@@ -15,7 +15,11 @@ class TournamentController extends Controller {
         return view('tournament.index', compact('tournaments'));
     }
 
-    public function show(Tournament $tournament, Request $request) {}
+    public function show(Tournament $tournament, Request $request) {
+        $cores = ['red', 'blue', 'green', 'yellow'];
+
+        return view('tournament.show', compact('tournament', 'cores'));
+    }
 
     public function create(Request $request) {
         $players = Player::all();
@@ -77,4 +81,30 @@ class TournamentController extends Controller {
     }
 
     public function destroy(Tournament $tournament, Request $request) {}
+
+    public function activate(Tournament $tournament, Request $request) {
+        $this->validate($request, [
+            'team.*' => 'required|max:255',
+        ], [
+            'team.*.required' => 'Para ativar o torneio, é necessário que todos os times estejam preenchidos.',
+            'team.*.max' => 'O nome do time deve conter até 255 caracteres.'
+        ]);
+
+        DB::transaction(function() use ($request, $tournament) {
+            foreach ($request->team as $id => $team) {
+                $tournament->players()->updateExistingPivot($id, ['team' => $team]);
+            }
+
+            $isComplete = $tournament->players()->withPivot('team')->get()
+                ->filter(function($player) {
+                    return is_null($player->pivot->team);
+                })
+                ->isEmpty();
+
+            if ($isComplete) $tournament->activate();
+        });
+
+        return Redirect::route('tournament.show', $tournament->id)
+            ->with('message', 'Torneio ativado com sucesso.');
+    }
 }

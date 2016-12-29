@@ -19,4 +19,14 @@ class Tournament extends Model {
     public function state() {
         return $this->belongsTo(TournamentState::class, 'tournament_state_id');
     }
+
+    public function activate() {
+        if ($this->state == 1) {
+            $this->state = 2;
+        }
+
+        $this->save();
+
+        return $this;
+    }
 }

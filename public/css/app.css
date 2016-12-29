@@ -7701,6 +7701,14 @@ button.close {
   margin-top: 10px;
 }
 
+.hoffset {
+  margin-left: 10px;
+}
+
+.hoffset2 {
+  margin-left: 15px;
+}
+
 h3.box-title {
   vertical-align: middle;
 }
