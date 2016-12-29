@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Match extends Model {
     protected $table = 'match';
+    protected $fillable = ['tournament_id', 'home_player_id', 'away_player_id'];
 
     public function tournament() {
         return $this->belongsTo('App\Tournament', 'tournament_id');
