@@ -42,6 +42,11 @@ class TournamentController extends Controller {
     }
 
     public function edit(Tournament $tournament, Request $request) {
+        if (!$tournament->state->can_edit) {
+            return Redirect::route('tournament.index')
+                ->with('error', 'O torneio ' . $tournament->name .' não pode ser editado.');
+        }
+
         $players = Player::all();
         $tournament->player_id = $tournament->players->pluck('id')->toArray();
 
@@ -49,6 +54,11 @@ class TournamentController extends Controller {
     }
 
     public function update(Tournament $tournament, Request $request) {
+        if (!$tournament->state->can_edit) {
+            return Redirect::route('tournament.index')
+                ->with('error', 'O torneio ' . $tournament->name .' não pode ser editado.');
+        }
+
         $this->validate($request, [
             'name' => 'required|max:255',
             'player.*' => 'integer|exists:player,id'

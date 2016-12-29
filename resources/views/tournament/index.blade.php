@@ -35,6 +35,7 @@
                     <tr>
                         <th>Nome</th>
                         <th>Jogadores</th>
+                        <th>Estado</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -51,23 +52,28 @@
                                 return $player->name;
                             })->toArray()) }}
                         </td>
+                        <td>{{ $tournament->state->name }}</td>
                         <td>
                             <a href="{{ route('tournament.show', $tournament->id) }}" class="acao">
                                 <i class="fa fa-eye" data-toggle="tooltip"
                                    data-placement="bottom" title="Ver informações"></i>
                             </a>
-                            <a href="{{ route('tournament.edit', $tournament->id) }}" class="acao">
-                                <i class="fa fa-pencil" data-toggle="tooltip"
-                                   data-placement="bottom" title="Editar"></i>
-                            </a>
-                            {{--!! Form::open(['method' => 'delete',
-                                'route' => ['tournament.destroy', $tournament->id],
-                                'class' => 'form-destroy', 'data-nome' => $tournament->name]) !!}
-                            <a class="acao destroy" data-toggle="tooltip"
-                               data-placement="bottom" title="Excluir">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                            {!! Form::close() !!--}}
+                            @if ($tournament->state->can_edit)
+                                <a href="{{ route('tournament.edit', $tournament->id) }}" class="acao">
+                                    <i class="fa fa-pencil" data-toggle="tooltip"
+                                       data-placement="bottom" title="Editar"></i>
+                                </a>
+                            @endif
+                            @if ($tournament->state->can_remove)
+                                {{--!! Form::open(['method' => 'delete',
+                                    'route' => ['tournament.destroy', $tournament->id],
+                                    'class' => 'form-destroy', 'data-nome' => $tournament->name]) !!}
+                                <a class="acao destroy" data-toggle="tooltip"
+                                   data-placement="bottom" title="Excluir">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                {!! Form::close() !!--}}
+                            @endif
                         </td>
                     </tr>
                 @endforeach
