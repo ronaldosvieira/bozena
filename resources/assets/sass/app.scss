@@ -7,3 +7,16 @@
 
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+.acao {cursor: pointer;}
+
+.acao i {
+  color: black;
+  font-size: 24px;
+}
+
+.voffset {margin-top: 10px;}
+
+h3.box-title {vertical-align: middle;}
+
+.form-destroy {display: inline;}

@@ -85,7 +85,7 @@ return [
     |
     */
 
-    'dashboard_url' => 'home',
+    'dashboard_url' => '/',
 
     'logout_url' => 'logout',
 
@@ -110,21 +110,15 @@ return [
     'menu' => [
         'MENU',
         [
+            'text'        => 'Jogadores',
+            'route'       => 'player.index',
+            'icon'        => 'users',
+        ],
+        [
             'text'        => 'Torneios',
             'route'       => 'tournament.index',
             'icon'        => 'soccer-ball-o',
         ],
-        /*'ACCOUNT SETTINGS',
-        [
-            'text' => 'Profile',
-            'url'  => 'admin/settings',
-            'icon' => 'user',
-        ],
-        [
-            'text' => 'Change Password',
-            'url'  => 'admin/settings',
-            'icon' => 'lock',
-        ],*/
     ],
 
     /*

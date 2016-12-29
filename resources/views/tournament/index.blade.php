@@ -20,6 +20,8 @@
         <!-- /.box-header -->
 
         <div class="box-body">
+            @include('partials.session_message')
+
             @if ($tournaments->count())
             <table id="tabela" class="table table-bordered table-hover table-striped">
                 <thead>
@@ -39,7 +41,7 @@
                             }) }}
                         </td>
                         <td>
-                            <a href="{{ route('$tournament.edit', $tournament->id) }}">
+                            <a href="{{ route('tournament.edit', $tournament->id) }}">
                                 <i class="material-icons md-black md-24 tooltip-edit">
                                     &#xE150;
                                 </i>

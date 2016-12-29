@@ -9,6 +9,10 @@ class Player extends Model {
     protected $fillable = ['name'];
 
     public function tournaments() {
-        return $this->hasMany('App\Tournament', 'player_tournament');
+        return $this->belongsToMany('App\Tournament', 'player_tournament');
+    }
+
+    public function user() {
+        return $this->hasOne(User::class, 'player_id');
     }
 }

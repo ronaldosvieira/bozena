@@ -30,7 +30,7 @@ class TournamentController extends Controller {
         ]);
 
         return Redirect::route('tournament.index')
-            ->with('message', 'Torneio criado com sucesso');
+            ->with('message', 'Torneio criado com sucesso.');
     }
 
     public function edit() {}

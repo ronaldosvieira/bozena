@@ -19,4 +19,5 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('tournament', 'TournamentController');
+    Route::resource('player', 'PlayerController');
 });
