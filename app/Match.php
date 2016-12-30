@@ -21,6 +21,10 @@ class Match extends Model {
         return $this->belongsTo('App\Player', 'away_player_id');
     }
 
+    public function state() {
+        return $this->belongsTo(MatchState::class, 'match_state_id');
+    }
+
     public function goals() {
         return $this->hasMany('App\Goal', 'match_id');
     }

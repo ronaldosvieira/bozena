@@ -7758,4 +7758,12 @@ h3.box-title {
   font-weight: bold;
 }
 
+.match-state {
+  color: gray;
+}
+
+.match-state-now {
+  color: green;
+}
+
 /*# sourceMappingURL=app.css.map */
