@@ -18,6 +18,8 @@ class TournamentController extends Controller {
     public function show(Tournament $tournament, Request $request) {
         $cores = ['red', 'blue', 'green', 'yellow'];
 
+        $tournament->load('matches.goals');
+
         return view('tournament.show', compact('tournament', 'cores'));
     }
 

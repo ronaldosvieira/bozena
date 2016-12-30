@@ -13,16 +13,25 @@ class Tournament extends Model {
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     public function players() {
-        return $this->belongsToMany('App\Player', 'player_tournament');
+        return $this->belongsToMany('App\Player', 'player_tournament')
+            ->withPivot('team');
     }
 
     public function state() {
         return $this->belongsTo(TournamentState::class, 'tournament_state_id');
     }
 
+    public function matches() {
+        return $this->hasMany(Match::class, 'tournament_id');
+    }
+
+    public function isActive() {
+        return $this->state->id == 2;
+    }
+
     public function activate() {
-        if ($this->state == 1) {
-            $this->state = 2;
+        if ($this->state->id == 1) {
+            $this->tournament_state_id = 2;
         }
 
         $this->save();
