@@ -1,8 +1,8 @@
 {!! Form::open([
-                'route' => ['tournament.activate', $tournament->id],
-                'method' => 'post']) !!}
+    'route' => ['tournament.activate', $tournament->id],
+    'method' => 'post']) !!}
 
-@foreach ($tournament->players() as $player)
+@foreach ($tournament->players as $player)
     <div class="col-sm-6 col-md-3">
         <!-- Widget: user widget style 1 -->
         <div class="box box-widget widget-user-2">

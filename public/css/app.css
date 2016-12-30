@@ -7688,6 +7688,10 @@ button.close {
   }
 }
 
+.debug {
+  border: solid 1px red;
+}
+
 .acao {
   cursor: pointer;
 }
@@ -7699,6 +7703,14 @@ button.close {
 
 .voffset {
   margin-top: 10px;
+}
+
+.voffsetb {
+  margin-bottom: 10px;
+}
+
+.voffsetb2 {
+  margin-bottom: 15px;
 }
 
 .hoffset {
@@ -7724,6 +7736,26 @@ h3.box-title {
 
 .select2-selection__choice__remove {
   color: white !important;
+}
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.no-margin {
+  margin: 0 !important;
+}
+
+.bg-bozena {
+  background-color: #f39c12;
+}
+
+.match {
+  font-size: 18px;
+}
+
+.score {
+  font-weight: bold;
 }
 
 /*# sourceMappingURL=app.css.map */

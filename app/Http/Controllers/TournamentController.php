@@ -98,6 +98,11 @@ class TournamentController extends Controller {
                 $tournament->players()->updateExistingPivot($id, ['team' => $team]);
             }
 
+            if ($tournament->players->count() < 2) {
+                return Redirect::back()
+                    ->with('error', 'Não é possível ativar um torneio com menos de dois jogadores.');
+            }
+
             $isComplete = $tournament->players()->withPivot('team')->get()
                 ->filter(function($player) {
                     return is_null($player->pivot->team);
