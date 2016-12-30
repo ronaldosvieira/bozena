@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Match;
 use App\Player;
 use App\Tournament;
 use Illuminate\Http\Request;
@@ -103,10 +104,60 @@ class TournamentController extends Controller {
                 })
                 ->isEmpty();
 
-            if ($isComplete) $tournament->activate();
+            if ($isComplete) {
+                $this->generateMatches($tournament);
+                $tournament->activate();
+            }
         });
 
         return Redirect::route('tournament.show', $tournament->id)
             ->with('message', 'Torneio ativado com sucesso.');
+    }
+
+    private function generateMatches(Tournament $tournament) {
+        $tournament->load('players');
+
+        $players = $tournament->players->shuffle()->chunk(2);
+        $firstTurn = collect();
+        $secondTurn = collect();
+
+        $groupA = $players->get(0)->pluck('id');
+        $groupB = $players->get(1)->pluck('id');
+
+        if (!is_null($players->get(2))) {
+            $groupA->push($players->get(2)->first()->id);
+            $groupB->push(0);
+        }
+
+        for ($week = 1; $week < $tournament->players->count(); $week++) {
+            for ($match = 0; $match < $groupA->count(); $match++) {
+                if (!$groupA->get($match) || !$groupB->get($match))
+                    continue;
+
+                $firstTurn->push(new Match([
+                    'week' => $week,
+                    'tournament_id' => $tournament->id,
+                    'home_player_id' => $groupA->get($match),
+                    'away_player_id' => $groupB->get($match)
+                ]));
+
+                $secondTurn->push(new Match([
+                    'week' => $week + $tournament->players->count() - 1,
+                    'tournament_id' => $tournament->id,
+                    'home_player_id' => $groupB->get($match),
+                    'away_player_id' => $groupA->get($match)
+                ]));
+            }
+
+            $groupA->put($groupA->count(), $groupA->get(1));
+            $groupA->put(1, $groupB->shift());
+            $groupB->push($groupA->pop());
+        }
+
+        $matches = $firstTurn->merge($secondTurn);
+
+        $matches->each(function ($match) {
+            $match->save();
+        });
     }
 }
