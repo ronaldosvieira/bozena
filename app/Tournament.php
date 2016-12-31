@@ -25,15 +25,13 @@ class Tournament extends Model {
         return $this->hasMany(Match::class, 'tournament_id');
     }
 
-    public function finishedMatches() {
+    public function activeMatches() {
         return $this->matches()
-            ->select('match.*')
-            ->join('match_state as ms', 'ms.id', '=', 'match.match_state_id')
-            ->where('ms.is_done', true);
+            ->where('match_state_id', '!=', '1');
     }
 
-    public function getFinishedMatchesAttribute() {
-        return $this->finishedMatches()->get();
+    public function getActiveMatchesAttribute() {
+        return $this->activeMatches()->get();
     }
 
     public function isActive() {

@@ -67,7 +67,7 @@ class MatchController extends Controller {
             'match_id' => $match->id,
             'team' => $request->team,
             'scorer' => $request->scorer,
-            'assister' => $request->assister
+            'assister' => $request->assister?: null
         ]);
 
         return Redirect::route('tournament.show', $tournament->id)

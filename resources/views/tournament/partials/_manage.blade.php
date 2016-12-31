@@ -39,7 +39,7 @@
             </thead>
             <tbody>
             @foreach ($tournament->players->sortByDesc(function($player) use ($tournament) {
-                return $tournament->finishedMatches->filter(function($match) use ($player) {
+                return $tournament->activeMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
                             && ($match->goals->where('team', 'HOME')->count()
                                 > $match->goals->where('team', 'AWAY')->count()))
@@ -48,7 +48,7 @@
                                 > $match->goals->where('team', 'HOME')->count()));
                     })->count() * 3
                     +
-                    $tournament->finishedMatches->filter(function($match) use ($player) {
+                    $tournament->activeMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
                             && ($match->goals->where('team', 'HOME')->count()
                                 == $match->goals->where('team', 'AWAY')->count()))
@@ -61,13 +61,13 @@
             <tr>
                 <td>{{ $player->name }}</td>
                 <td>
-                    {{ $tournament->finishedMatches->filter(function($match) use ($player) {
+                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
                         return $match->home_player_id == $player->id
                             || $match->away_player_id == $player->id;
                     })->count() }}
                 </td>
                 <td>
-                    {{ $tournament->finishedMatches->filter(function($match) use ($player) {
+                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
                             && ($match->goals->where('team', 'HOME')->count())
                                 > $match->goals->where('team', 'AWAY')->count())
@@ -77,7 +77,7 @@
                     })->count() }}
                 </td>
                 <td>
-                    {{ $tournament->finishedMatches->filter(function($match) use ($player) {
+                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
                             && ($match->goals->where('team', 'HOME')->count())
                                 == $match->goals->where('team', 'AWAY')->count())
@@ -87,7 +87,7 @@
                     })->count() }}
                 </td>
                 <td>
-                    {{ $tournament->finishedMatches->filter(function($match) use ($player) {
+                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
                             && ($match->goals->where('team', 'HOME')->count())
                                 < $match->goals->where('team', 'AWAY')->count())
@@ -97,14 +97,14 @@
                     })->count() }}
                 </td>
                 <td>
-                    {{ $tournament->finishedMatches->filter(function($match) use ($player) {
+                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
                         return $match->home_player_id == $player->id;
                     })->reduce(function($carry, $match) {
                         return $carry + $match->goals
                             ->where('team', 'HOME')->count();
                     })
                      +
-                     $tournament->finishedMatches->filter(function($match) use ($player) {
+                     $tournament->activeMatches->filter(function($match) use ($player) {
                         return $match->away_player_id == $player->id;
                      })->reduce(function($carry, $match) {
                         return $carry + $match->goals
@@ -112,14 +112,14 @@
                      }) }}
                 </td>
                 <td>
-                    {{ $tournament->finishedMatches->filter(function($match) use ($player) {
+                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
                         return $match->home_player_id == $player->id;
                     })->reduce(function($carry, $match) {
                         return $carry + $match->goals
                             ->where('team', 'AWAY')->count();
                     })
                      +
-                     $tournament->finishedMatches->filter(function($match) use ($player) {
+                     $tournament->activeMatches->filter(function($match) use ($player) {
                         return $match->away_player_id == $player->id;
                      })->reduce(function($carry, $match) {
                         return $carry + $match->goals
@@ -127,28 +127,28 @@
                      }) }}
                 </td>
                 <td>
-                    {{ $tournament->finishedMatches->filter(function($match) use ($player) {
+                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
                         return $match->home_player_id == $player->id;
                     })->reduce(function($carry, $match) {
                         return $carry + $match->goals
                             ->where('team', 'HOME')->count();
                     })
                      +
-                     $tournament->finishedMatches->filter(function($match) use ($player) {
+                     $tournament->activeMatches->filter(function($match) use ($player) {
                         return $match->away_player_id == $player->id;
                      })->reduce(function($carry, $match) {
                         return $carry + $match->goals
                             ->where('team', 'AWAY')->count();
                      })
                      -
-                     $tournament->finishedMatches->filter(function($match) use ($player) {
+                     $tournament->activeMatches->filter(function($match) use ($player) {
                         return $match->home_player_id == $player->id;
                     })->reduce(function($carry, $match) {
                         return $carry + $match->goals
                             ->where('team', 'AWAY')->count();
                     })
                      +
-                     $tournament->finishedMatches->filter(function($match) use ($player) {
+                     $tournament->activeMatches->filter(function($match) use ($player) {
                         return $match->away_player_id == $player->id;
                      })->reduce(function($carry, $match) {
                         return $carry + $match->goals
@@ -156,7 +156,7 @@
                      }) }}
                 </td>
                 <td>
-                    {{ $tournament->finishedMatches->filter(function($match) use ($player) {
+                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
                             && ($match->goals->where('team', 'HOME')->count()
                                 > $match->goals->where('team', 'AWAY')->count()))
@@ -165,7 +165,7 @@
                                 > $match->goals->where('team', 'HOME')->count()));
                     })->count() * 3
                     +
-                    $tournament->finishedMatches->filter(function($match) use ($player) {
+                    $tournament->activeMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
                             && ($match->goals->where('team', 'HOME')->count())
                                 == $match->goals->where('team', 'AWAY')->count())
@@ -190,6 +190,100 @@
     </div>
 </div>
 @endif
+
+<div class="row voffset">
+    <div class="col-lg-offset-1 col-lg-10"><div class="col-lg-6">
+        <h3 class="col-xs-12 text-center">Gols</h3>
+        <div class="table-responsivse">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>Jogador</th>
+                    <th>Time</th>
+                    <th>Gols</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @foreach (DB::table('goal as g')
+                        ->select('g.scorer as name', DB::raw('CASE WHEN g.team = \'HOME\' THEN hpt.team ELSE apt.team END'), DB::raw('count(*) as goals'))
+                        ->leftJoin('match as m', 'm.id', '=', 'g.match_id')
+                        ->leftJoin('player_tournament as hpt', function ($join) {
+                            $join->on('hpt.player_id', '=', 'm.home_player_id')
+                                ->where('hpt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
+                        })
+                        ->leftJoin('player_tournament as apt', function ($join) {
+                            $join->on('apt.player_id', '=', 'm.home_player_id')
+                                ->where('apt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
+                        })
+                        ->groupBy('g.scorer', 'g.team', 'hpt.team', 'apt.team')
+                        ->get()
+                        ->groupBy('name')
+                        ->map(function ($goals) {
+                            return $goals->reduce(function($carry, $goal) {
+                                if ($carry) $carry->goals += $goal->goals;
+                                else $carry = $goal;
+
+                                return $carry;
+                            });
+                        }) as $scorer)
+                        <tr>
+                            <td>{{ $scorer->name }}</td>
+                            <td></td>
+                            <td>{{ $scorer->goals }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <h3 class="col-xs-12 text-center">Assistências</h3>
+        <div class="table-responsivse">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>Jogador</th>
+                    <th>Time</th>
+                    <th>Gols</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (DB::table('goal as g')
+                        ->select('g.assister as name',
+                            DB::raw('CASE WHEN g.team = \'HOME\' THEN hpt.team ELSE apt.team END'),
+                            DB::raw('count(*) as assists'))
+                        ->leftJoin('match as m', 'm.id', '=', 'g.match_id')
+                        ->leftJoin('player_tournament as hpt', function ($join) {
+                            $join->on('hpt.player_id', '=', 'm.home_player_id')
+                                ->where('hpt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
+                        })
+                        ->leftJoin('player_tournament as apt', function ($join) {
+                            $join->on('apt.player_id', '=', 'm.home_player_id')
+                                ->where('apt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
+                        })
+                        ->whereNotNull('g.assister')
+                        ->groupBy('g.assister', 'g.team', 'hpt.team', 'apt.team')
+                        ->get()
+                        ->groupBy('name')
+                        ->map(function ($goals) {
+                            return $goals->reduce(function($carry, $goal) {
+                                if ($carry) $carry->assists += $goal->assists;
+                                else $carry = $goal;
+
+                                return $carry;
+                            });
+                        }) as $assister)
+                    <tr>
+                        <td>{{ $assister->name }}</td>
+                        <td></td>
+                        <td>{{ $assister->assists }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div></div>
+</div>
 
 <div class="box-footer">
     <a href="{{ route('tournament.index') }}"
