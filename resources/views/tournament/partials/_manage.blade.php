@@ -147,7 +147,7 @@
                         return $carry + $match->goals
                             ->where('team', 'AWAY')->count();
                     })
-                     +
+                     -
                      $tournament->activeMatches->filter(function($match) use ($player) {
                         return $match->away_player_id == $player->id;
                      })->reduce(function($carry, $match) {
