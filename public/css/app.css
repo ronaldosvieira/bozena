@@ -7766,6 +7766,14 @@ h3.box-title {
   color: green;
 }
 
+.home-team {
+  text-align: right !important;
+}
+
+.away-team {
+  text-align: left !important;
+}
+
 .start-match-form, .end-match-form {
   display: inline;
 }

@@ -5,7 +5,7 @@
         </h4>
     </div>
     <div class="row">
-        <div class="col-xs-12">
+        <div class="table-responsive">
             <table class="table table-striped table-condensed no-margin">
                 @foreach ($matches->sortBy('id') as $match)
                     <tr class="match" data-id="{{ $match->id }}">

@@ -20,9 +20,9 @@
 @endforeach
 </div>
 
-<div class="table-responsive">
-    <div class="col-xs-12 col-lg-offset-3 col-lg-6">
-        <h3 class="text-center">Tabela</h3>
+<div class="col-xs-12 col-lg-offset-3 col-lg-6">
+    <h3 class="text-center">Tabela</h3>
+    <div class="table-responsive">
         <table class="table table-bordered table-condensed table-hover table-striped">
             <thead>
             <tr>
