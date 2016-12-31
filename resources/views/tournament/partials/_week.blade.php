@@ -69,6 +69,7 @@
     </div>
 </div>
 
+@foreach ($matches as $match)
 <!-- Modal -->
 <div class="modal fade goal-modal" id="goal-modal-{{ $match->id }}" tabindex="-1" role="dialog" aria-labelledby="goal-modal-label">
     <div class="modal-dialog" role="document">
@@ -125,3 +126,4 @@
         </div>
     </div>
 </div>
+@endforeach
