@@ -8,11 +8,11 @@
         <div class="col-xs-12">
             <table class="table table-striped table-condensed no-margin">
                 @foreach ($matches->sortBy('id') as $match)
-                    <tr class="match">
+                    <tr class="match" data-id="{{ $match->id }}">
                         <td class="col-xs-2 match-state">
                             {{ $match->state->name }}
                         </td>
-                        <td class="col-xs-3 text-right">
+                        <td class="col-xs-3 home-team text-right">
                             {{ $match->homePlayer->name }}
                         </td>
                         <td class="col-xs-1 text-center">
@@ -28,12 +28,13 @@
                                 @endif
                             </span>
                         </td>
-                        <td class="col-xs-3 text-left">
+                        <td class="col-xs-3 away-team text-left">
                             {{ $match->awayPlayer->name }}
                         </td>
                         <td class="col-xs-2">
                             @if ($match->state->can_add_goals)
-                                <a class="acao">
+                                <a class="acao add-goal" data-toggle="modal" data-target="#goal-modal-{{ $match->id }}"
+                                    data-id="{{ $match->id }}">
                                     <i class="fa fa-soccer-ball-o" data-toggle="tooltip"
                                        data-placement="bottom" title="Adicionar gol"></i>
                                 </a>
@@ -41,9 +42,9 @@
                                 {!! Form::open([
                                     'method' => 'post',
                                     'route' => ['tournament.match.end', $match->tournament_id, $match->id],
-                                    'class' => 'terminar-partida-form'])
+                                    'class' => 'end-match-form'])
                                 !!}
-                                <a class="acao terminar-partida">
+                                <a class="acao end-match">
                                     <i class="fa fa-hand-paper-o" data-toggle="tooltip"
                                        data-placement="bottom" title="Terminar partida"></i>
                                 </a>
@@ -52,9 +53,9 @@
                                 {!! Form::open([
                                     'method' => 'post',
                                     'route' => ['tournament.match.start', $match->tournament_id, $match->id],
-                                    'class' => 'iniciar-partida-form'])
+                                    'class' => 'start-match-form'])
                                 !!}
-                                <a class="acao iniciar-partida">
+                                <a class="acao start-match">
                                     <i class="fa fa-play" data-toggle="tooltip"
                                        data-placement="bottom" title="Iniciar partida"></i>
                                 </a>
@@ -68,3 +69,59 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade goal-modal" id="goal-modal-{{ $match->id }}" tabindex="-1" role="dialog" aria-labelledby="goal-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            {{ Form::open(['method' => 'post',
+                    'route' => ['tournament.match.goal.store', $match->tournament_id, $match->id],
+                    'class' => 'form-horizontal']) }}
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="goal-modal-label">
+                    Adicionar gol à partida
+                    <span class="home-team-modal">{{ $match->homePlayer->name }}</span>
+                    x
+                    <span class="away-team-modal">{{ $match->awayPlayer->name }}</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group team-modal">
+                    {!! Form::label('team', 'Jogador *', ['class' => 'control-label col-sm-3 text-right']) !!}
+                    <div class="col-sm-8">
+                        {!! Form::select('team',
+                            ['HOME' => $match->homePlayer->name, 'AWAY' => $match->awayPlayer->name],
+                            null, ['class' => 'form-control', 'required', 'placeholder' => '(Escolha um jogador)']) !!}
+                    </div>
+                </div>
+
+                <div class="form-group scorer-modal">
+                    {!! Form::label('scorer', 'Autor do gol *', ['class' => 'control-label col-sm-3 text-right']) !!}
+                    <div class="col-sm-8">
+                        {!! Form::text('scorer', null,
+                            ['class' => 'form-control', 'required']) !!}
+                    </div>
+                </div>
+
+                <div class="form-group assister-modal">
+                    {!! Form::label('assister', 'Autor da assistência',
+                        ['class' => 'control-label col-sm-3 text-right']) !!}
+                    <div class="col-sm-8">
+                        {!! Form::text('assister', null,
+                            ['class' => 'form-control']) !!}
+                    </div>
+                </div>
+
+                <p class="pull-right">* Campos obrigatórios</p>
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success add-goal-submit">Adicionar gol</button>
+            </div>
+
+            {{ Form::close() }}
+        </div>
+    </div>
+</div>

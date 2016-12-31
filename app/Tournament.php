@@ -27,8 +27,9 @@ class Tournament extends Model {
 
     public function finishedMatches() {
         return $this->matches()
-            ->join('match_state', 'match_state.id', '=', 'match.match_state_id')
-            ->where('match_state.is_done', true);
+            ->select('match.*')
+            ->join('match_state as ms', 'ms.id', '=', 'match.match_state_id')
+            ->where('ms.is_done', true);
     }
 
     public function getFinishedMatchesAttribute() {

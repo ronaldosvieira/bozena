@@ -7766,12 +7766,12 @@ h3.box-title {
   color: green;
 }
 
-.iniciar-partida-form {
+.start-match-form, .end-match-form {
   display: inline;
 }
 
-.terminar-partida-form {
-  display: inline;
+.home-team-modal, .away-team-modal {
+  font-weight: bold;
 }
 
 /*# sourceMappingURL=app.css.map */

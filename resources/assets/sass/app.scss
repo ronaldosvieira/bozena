@@ -46,5 +46,6 @@ h3.box-title {vertical-align: middle;}
 .match-state {color: gray;}
 .match-state-now {color: green;}
 
-.iniciar-partida-form {display: inline;}
-.terminar-partida-form {display: inline;}
+.start-match-form, .end-match-form {display: inline;}
+
+.home-team-modal, .away-team-modal {font-weight: bold;}

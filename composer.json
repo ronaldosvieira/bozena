@@ -9,7 +9,8 @@
         "doctrine/dbal": "^2.5",
         "jeroennoten/laravel-adminlte": "^1.17",
         "laravel/framework": "5.3.*",
-        "laravelcollective/html": "^5.3"
+        "laravelcollective/html": "^5.3",
+        "sineld/bladeset": "^5.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

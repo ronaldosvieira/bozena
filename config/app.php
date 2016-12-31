@@ -180,6 +180,7 @@ return [
 
         JeroenNoten\LaravelAdminLte\ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Sineld\BladeSet\BladeSetServiceProvider::class,
     ],
 
     /*

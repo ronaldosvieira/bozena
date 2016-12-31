@@ -27,7 +27,7 @@ class Match extends Model {
     }
 
     public function goals() {
-        return $this->hasMany('App\Goal', 'match_id');
+        return $this->hasMany(Goal::class);
     }
 
     public function isStarted() {return $this->state->id != 1;}

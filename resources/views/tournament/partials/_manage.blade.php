@@ -41,20 +41,20 @@
             @foreach ($tournament->players->sortByDesc(function($player) use ($tournament) {
                 return $tournament->finishedMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
-                            && ($match->goals->where('team', 'HOME')->count())
-                                > $match->goals->where('team', 'AWAY')->count())
+                            && ($match->goals->where('team', 'HOME')->count()
+                                > $match->goals->where('team', 'AWAY')->count()))
                             || ($match->away_player_id == $player->id
-                            && ($match->goals->where('team', 'AWAY')->count())
-                                > $match->goals->where('team', 'HOME')->count());
+                            && ($match->goals->where('team', 'AWAY')->count()
+                                > $match->goals->where('team', 'HOME')->count()));
                     })->count() * 3
                     +
                     $tournament->finishedMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
-                            && ($match->goals->where('team', 'HOME')->count())
-                                == $match->goals->where('team', 'AWAY')->count())
+                            && ($match->goals->where('team', 'HOME')->count()
+                                == $match->goals->where('team', 'AWAY')->count()))
                             || ($match->away_player_id == $player->id
-                            && ($match->goals->where('team', 'AWAY')->count())
-                                == $match->goals->where('team', 'HOME')->count());
+                            && ($match->goals->where('team', 'AWAY')->count()
+                                == $match->goals->where('team', 'HOME')->count()));
                     })->count();
             })
             as $player)
@@ -158,11 +158,11 @@
                 <td>
                     {{ $tournament->finishedMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
-                            && ($match->goals->where('team', 'HOME')->count())
-                                > $match->goals->where('team', 'AWAY')->count())
+                            && ($match->goals->where('team', 'HOME')->count()
+                                > $match->goals->where('team', 'AWAY')->count()))
                             || ($match->away_player_id == $player->id
-                            && ($match->goals->where('team', 'AWAY')->count())
-                                > $match->goals->where('team', 'HOME')->count());
+                            && ($match->goals->where('team', 'AWAY')->count()
+                                > $match->goals->where('team', 'HOME')->count()));
                     })->count() * 3
                     +
                     $tournament->finishedMatches->filter(function($match) use ($player) {
@@ -186,7 +186,7 @@
     <div class="col-lg-offset-1 col-lg-10">
         <h3 class="col-xs-12 text-center">Partidas</h3>
             @each('tournament.partials._week',
-                $tournament->matches->groupBy('week'), 'matches')
+                $tournament->matches->groupBy('week')->sort(), 'matches')
     </div>
 </div>
 @endif
@@ -204,15 +204,15 @@
 @push('js')
 <script>
     $(document).ready(function() {
-        $('.iniciar-partida, .terminar-partida').click(function() {
+        $('.start-match, .end-match').click(function() {
             $(this).closest('form').submit();
         });
 
-        $('.iniciar-partida-form').on('submit', function() {
+        $('.start-match-form').on('submit', function() {
             return confirm('Deseja realmente iniciar a partida?');
         });
 
-        $('.terminar-partida-form').on('submit', function() {
+        $('.end-match-form').on('submit', function() {
             return confirm('Deseja realmente terminar a partida?');
         });
     });

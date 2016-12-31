@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c9a035d910630b8b8688e7e37b1715c4",
-    "content-hash": "537d941da269690549c17ceafd9c25cc",
+    "hash": "12097cf087a086a1f9f6cce6bfcbafdd",
+    "content-hash": "8f7cd87959ad6608934ec4cd0cad43ed",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1488,6 +1488,50 @@
                 "uuid"
             ],
             "time": "2016-11-22 19:21:44"
+        },
+        {
+            "name": "sineld/bladeset",
+            "version": "v5.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sineld/bladeset.git",
+                "reference": "0441b546483126d0f4aec10719abdab85bd6d998"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sineld/bladeset/zipball/0441b546483126d0f4aec10719abdab85bd6d998",
+                "reference": "0441b546483126d0f4aec10719abdab85bd6d998",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.3",
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sinan Eldem",
+                    "email": "sineld@gmail.com"
+                }
+            ],
+            "description": "A very simple blade extension which allows variables to be set within blade templates.",
+            "homepage": "https://github.com/sineld/bladeset",
+            "keywords": [
+                "blade",
+                "bladeset",
+                "laravel",
+                "template"
+            ],
+            "time": "2016-09-08 15:02:13"
         },
         {
             "name": "swiftmailer/swiftmailer",
