@@ -38,8 +38,8 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($tournament->players->sortBy(function($player) use ($tournament) {
-                return $tournament->matches->filter(function($match) use ($player) {
+            @foreach ($tournament->players->sortByDesc(function($player) use ($tournament) {
+                return $tournament->finishedMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
                             && ($match->goals->where('team', 'HOME')->count())
                                 > $match->goals->where('team', 'AWAY')->count())
@@ -48,7 +48,7 @@
                                 > $match->goals->where('team', 'HOME')->count());
                     })->count() * 3
                     +
-                    $tournament->matches->filter(function($match) use ($player) {
+                    $tournament->finishedMatches->filter(function($match) use ($player) {
                         return ($match->home_player_id == $player->id
                             && ($match->goals->where('team', 'HOME')->count())
                                 == $match->goals->where('team', 'AWAY')->count())
