@@ -7766,4 +7766,12 @@ h3.box-title {
   color: green;
 }
 
+.iniciar-partida-form {
+  display: inline;
+}
+
+.terminar-partida-form {
+  display: inline;
+}
+
 /*# sourceMappingURL=app.css.map */

@@ -183,11 +183,10 @@
 
 @if ($tournament->matches->count())
 <div class="row">
-    <h3 class="col-xs-12 text-center">Partidas</h3>
-        @each('tournament.partials._week',
-            $tournament->matches->groupBy('week'), 'matches')
-    <div class="col-xs-12 col-lg-6">
-
+    <div class="col-lg-offset-1 col-lg-10">
+        <h3 class="col-xs-12 text-center">Partidas</h3>
+            @each('tournament.partials._week',
+                $tournament->matches->groupBy('week'), 'matches')
     </div>
 </div>
 @endif
@@ -201,3 +200,21 @@
         Ativar torneio
     </button-->
 </div>
+
+@push('js')
+<script>
+    $(document).ready(function() {
+        $('.iniciar-partida, .terminar-partida').click(function() {
+            $(this).closest('form').submit();
+        });
+
+        $('.iniciar-partida-form').on('submit', function() {
+            return confirm('Deseja realmente iniciar a partida?');
+        });
+
+        $('.terminar-partida-form').on('submit', function() {
+            return confirm('Deseja realmente terminar a partida?');
+        });
+    });
+</script>
+@endpush

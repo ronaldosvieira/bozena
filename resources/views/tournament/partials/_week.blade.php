@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-xs-12">
             <table class="table table-striped table-condensed no-margin">
-                @foreach ($matches as $match)
+                @foreach ($matches->sortBy('id') as $match)
                     <tr class="match">
                         <td class="col-xs-2 match-state">
                             {{ $match->state->name }}
@@ -16,9 +16,17 @@
                             {{ $match->homePlayer->name }}
                         </td>
                         <td class="col-xs-1 text-center">
-                            <span class="score score-home"></span>
+                            <span class="score score-home">
+                                @if ($match->isStarted())
+                                    {{ $match->goals->where('team', 'HOME')->count() }}
+                                @endif
+                            </span>
                             x
-                            <span class="score score-away"></span>
+                            <span class="score score-away">
+                                @if ($match->isStarted())
+                                    {{ $match->goals->where('team', 'AWAY')->count() }}
+                                @endif
+                            </span>
                         </td>
                         <td class="col-xs-3 text-left">
                             {{ $match->awayPlayer->name }}
@@ -29,15 +37,28 @@
                                     <i class="fa fa-soccer-ball-o" data-toggle="tooltip"
                                        data-placement="bottom" title="Adicionar gol"></i>
                                 </a>
-                                <a class="acao">
+
+                                {!! Form::open([
+                                    'method' => 'post',
+                                    'route' => ['tournament.match.end', $match->tournament_id, $match->id],
+                                    'class' => 'terminar-partida-form'])
+                                !!}
+                                <a class="acao terminar-partida">
                                     <i class="fa fa-hand-paper-o" data-toggle="tooltip"
                                        data-placement="bottom" title="Terminar partida"></i>
                                 </a>
-                            @else
-                                <a class="acao">
+                                {!! Form::close() !!}
+                            @elseif (!$match->state->is_done)
+                                {!! Form::open([
+                                    'method' => 'post',
+                                    'route' => ['tournament.match.start', $match->tournament_id, $match->id],
+                                    'class' => 'iniciar-partida-form'])
+                                !!}
+                                <a class="acao iniciar-partida">
                                     <i class="fa fa-play" data-toggle="tooltip"
                                        data-placement="bottom" title="Iniciar partida"></i>
                                 </a>
+                                {!! Form::close() !!}
                             @endif
                         </td>
                     </tr>
@@ -46,3 +67,4 @@
         </div>
     </div>
 </div>
+
