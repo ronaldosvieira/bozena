@@ -225,10 +225,11 @@
 
                                 return $carry;
                             });
-                        }) as $scorer)
+                        })
+                        ->sortByDesc('goals') as $scorer)
                         <tr>
                             <td>{{ $scorer->name }}</td>
-                            <td></td>
+                            <td>{{ $scorer->team }}</td>
                             <td>{{ $scorer->goals }}</td>
                         </tr>
                     @endforeach
@@ -272,10 +273,11 @@
 
                                 return $carry;
                             });
-                        }) as $assister)
+                        })
+                        ->sortByDesc('goals') as $assister)
                     <tr>
                         <td>{{ $assister->name }}</td>
-                        <td></td>
+                        <td>{{ $assister->team }}</td>
                         <td>{{ $assister->assists }}</td>
                     </tr>
                 @endforeach
