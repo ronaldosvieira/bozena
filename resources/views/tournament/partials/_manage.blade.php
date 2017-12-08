@@ -215,6 +215,7 @@
                             $join->on('apt.player_id', '=', 'm.home_player_id')
                                 ->where('apt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
                         })
+                        ->where('m.tournament_id', '=', $tournament->id)
                         ->groupBy('g.scorer', 'g.team', 'hpt.team', 'apt.team')
                         ->get()
                         ->groupBy('name')
@@ -262,6 +263,7 @@
                             $join->on('apt.player_id', '=', 'm.home_player_id')
                                 ->where('apt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
                         })
+                        ->where('m.tournament_id', '=', $tournament->id)
                         ->whereNotNull('g.assister')
                         ->groupBy('g.assister', 'g.team', 'hpt.team', 'apt.team')
                         ->get()
