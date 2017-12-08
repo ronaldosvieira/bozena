@@ -276,7 +276,7 @@
                                 return $carry;
                             });
                         })
-                        ->sortByDesc('goals') as $assister)
+                        ->sortByDesc('assists') as $assister)
                     <tr>
                         <td>{{ $assister->name }}</td>
                         <td>{{ $assister->team }}</td>
