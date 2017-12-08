@@ -194,7 +194,7 @@
 <div class="row voffset">
     <div class="col-lg-offset-1 col-lg-10"><div class="col-lg-6">
         <h3 class="col-xs-12 text-center">Gols</h3>
-        <div class="table-responsivse">
+        <div class="table-responsive">
             <table class="table table-hover table-striped">
                 <thead>
                 <tr>
@@ -240,7 +240,7 @@
     </div>
     <div class="col-lg-6">
         <h3 class="col-xs-12 text-center">Assistências</h3>
-        <div class="table-responsivse">
+        <div class="table-responsive">
             <table class="table table-hover table-striped">
                 <thead>
                 <tr>
