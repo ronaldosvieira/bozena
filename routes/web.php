@@ -35,6 +35,11 @@ Route::post('tournament/{tournament}/match/{match}/goal/add', [
     'uses' => 'MatchController@addGoal'
 ]);
 
+Route::post('tournament/{tournament}/fetch', [
+    'as' => 'tournament.fetch',
+    'uses' => 'TournamentController@fetch'
+]);
+
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function() {
