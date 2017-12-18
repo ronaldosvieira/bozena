@@ -23,7 +23,7 @@
 <div class="col-xs-12 col-lg-offset-3 col-lg-6">
     <h3 class="text-center">Tabela</h3>
     <div class="table-responsive">
-        <table class="table table-bordered table-condensed table-hover table-striped">
+        <table class="table table-standings table-bordered table-condensed table-hover table-striped">
             <thead>
             <tr>
                 <th class="col-xs-4">Nome</th>
@@ -37,146 +37,7 @@
                 <th class="col-xs-1 text-center">Pts</th>
             </tr>
             </thead>
-            <tbody>
-            @foreach ($tournament->players->sortByDesc(function($player) use ($tournament) {
-                return $tournament->activeMatches->filter(function($match) use ($player) {
-                        return ($match->home_player_id == $player->id
-                            && ($match->goals->where('team', 'HOME')->count()
-                                > $match->goals->where('team', 'AWAY')->count()))
-                            || ($match->away_player_id == $player->id
-                            && ($match->goals->where('team', 'AWAY')->count()
-                                > $match->goals->where('team', 'HOME')->count()));
-                    })->count() * 3
-                    +
-                    $tournament->activeMatches->filter(function($match) use ($player) {
-                        return ($match->home_player_id == $player->id
-                            && ($match->goals->where('team', 'HOME')->count()
-                                == $match->goals->where('team', 'AWAY')->count()))
-                            || ($match->away_player_id == $player->id
-                            && ($match->goals->where('team', 'AWAY')->count()
-                                == $match->goals->where('team', 'HOME')->count()));
-                    })->count();
-            })
-            as $player)
-            <tr>
-                <td>{{ $player->name }}</td>
-                <td class="text-center">
-                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
-                        return $match->home_player_id == $player->id
-                            || $match->away_player_id == $player->id;
-                    })->count() }}
-                </td>
-                <td class="text-center">
-                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
-                        return ($match->home_player_id == $player->id
-                            && ($match->goals->where('team', 'HOME')->count())
-                                > $match->goals->where('team', 'AWAY')->count())
-                            || ($match->away_player_id == $player->id
-                            && ($match->goals->where('team', 'AWAY')->count())
-                                > $match->goals->where('team', 'HOME')->count());
-                    })->count() }}
-                </td>
-                <td class="text-center">
-                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
-                        return ($match->home_player_id == $player->id
-                            && ($match->goals->where('team', 'HOME')->count())
-                                == $match->goals->where('team', 'AWAY')->count())
-                            || ($match->away_player_id == $player->id
-                            && ($match->goals->where('team', 'AWAY')->count())
-                                == $match->goals->where('team', 'HOME')->count());
-                    })->count() }}
-                </td>
-                <td class="text-center">
-                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
-                        return ($match->home_player_id == $player->id
-                            && ($match->goals->where('team', 'HOME')->count())
-                                < $match->goals->where('team', 'AWAY')->count())
-                            || ($match->away_player_id == $player->id
-                            && ($match->goals->where('team', 'AWAY')->count())
-                                < $match->goals->where('team', 'HOME')->count());
-                    })->count() }}
-                </td>
-                <td class="text-center">
-                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
-                        return $match->home_player_id == $player->id;
-                    })->reduce(function($carry, $match) {
-                        return $carry + $match->goals
-                            ->where('team', 'HOME')->count();
-                    })
-                     +
-                     $tournament->activeMatches->filter(function($match) use ($player) {
-                        return $match->away_player_id == $player->id;
-                     })->reduce(function($carry, $match) {
-                        return $carry + $match->goals
-                            ->where('team', 'AWAY')->count();
-                     }) }}
-                </td>
-                <td class="text-center">
-                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
-                        return $match->home_player_id == $player->id;
-                    })->reduce(function($carry, $match) {
-                        return $carry + $match->goals
-                            ->where('team', 'AWAY')->count();
-                    })
-                     +
-                     $tournament->activeMatches->filter(function($match) use ($player) {
-                        return $match->away_player_id == $player->id;
-                     })->reduce(function($carry, $match) {
-                        return $carry + $match->goals
-                            ->where('team', 'HOME')->count();
-                     }) }}
-                </td>
-                <td class="text-center">
-                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
-                        return $match->home_player_id == $player->id;
-                    })->reduce(function($carry, $match) {
-                        return $carry + $match->goals
-                            ->where('team', 'HOME')->count();
-                    })
-                     +
-                     $tournament->activeMatches->filter(function($match) use ($player) {
-                        return $match->away_player_id == $player->id;
-                     })->reduce(function($carry, $match) {
-                        return $carry + $match->goals
-                            ->where('team', 'AWAY')->count();
-                     })
-                     -
-                     $tournament->activeMatches->filter(function($match) use ($player) {
-                        return $match->home_player_id == $player->id;
-                    })->reduce(function($carry, $match) {
-                        return $carry + $match->goals
-                            ->where('team', 'AWAY')->count();
-                    })
-                     -
-                     $tournament->activeMatches->filter(function($match) use ($player) {
-                        return $match->away_player_id == $player->id;
-                     })->reduce(function($carry, $match) {
-                        return $carry + $match->goals
-                            ->where('team', 'HOME')->count();
-                     }) }}
-                </td>
-                <td class="text-center">
-                    {{ $tournament->activeMatches->filter(function($match) use ($player) {
-                        return ($match->home_player_id == $player->id
-                            && ($match->goals->where('team', 'HOME')->count()
-                                > $match->goals->where('team', 'AWAY')->count()))
-                            || ($match->away_player_id == $player->id
-                            && ($match->goals->where('team', 'AWAY')->count()
-                                > $match->goals->where('team', 'HOME')->count()));
-                    })->count() * 3
-                    +
-                    $tournament->activeMatches->filter(function($match) use ($player) {
-                        return ($match->home_player_id == $player->id
-                            && ($match->goals->where('team', 'HOME')->count())
-                                == $match->goals->where('team', 'AWAY')->count())
-                            || ($match->away_player_id == $player->id
-                            && ($match->goals->where('team', 'AWAY')->count())
-                                == $match->goals->where('team', 'HOME')->count());
-                    })->count() }}
-                </td>
-            </tr>
-            @endforeach
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
 </div>
@@ -203,9 +64,7 @@
                     <th>Gols</th>
                 </tr>
                 </thead>
-                <tbody>
-
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
@@ -220,9 +79,7 @@
                     <th>Gols</th>
                 </tr>
                 </thead>
-                <tbody>
-
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div></div>
@@ -255,7 +112,18 @@
     });
 
     var rows = {
-        standing: function(player) {},
+        standing: function(player) {
+            return $('<tr>')
+                .append($('<td>', {class: "text-left ", text: player.name}))
+                .append($('<td>', {class: "text-center ", text: player.matches}))
+                .append($('<td>', {class: "text-center ", text: player.won}))
+                .append($('<td>', {class: "text-center ", text: player.draw}))
+                .append($('<td>', {class: "text-center ", text: player.lost}))
+                .append($('<td>', {class: "text-center ", text: player.goals_for}))
+                .append($('<td>', {class: "text-center ", text: player.goals_against}))
+                .append($('<td>', {class: "text-center ", text: player.goal_diff}))
+                .append($('<td>', {class: "text-center ", text: player.points}));
+        },
         week: function(week) {},
         goal: function(info) {
             return $('<tr>')
@@ -285,7 +153,20 @@
             success: function(data) {
                 console.log(data);
 
-                $('.table-goals tbody, .table-assists tbody').html('');
+                $('.table-standings tbody, .table-goals tbody, .table-assists tbody').html('');
+
+                $('.table-standings tbody').append(
+                    data.players
+                        .sort(function (a, b) {
+                            var criteria = ['points', 'goal_diff', 'won', 'goals_for'];
+                            var res = 0;
+
+                            for (var i = 0; res === 0 && i < criteria.length; i++)
+                                res = b[criteria[i]] - a[criteria[i]];
+
+                            return res;
+                        })
+                        .map(rows['standing']));
 
                 $('.table-goals tbody').append(
                     data.goals
