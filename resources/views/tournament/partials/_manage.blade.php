@@ -140,6 +140,8 @@
     };
 
     function fetch() {
+        $('.refresh-button').attr('disabled', true);
+
         $.ajax({
             method: 'POST',
             url: '{{ route('tournament.fetch', $tournament->id) }}',
@@ -177,10 +179,22 @@
                     data.assists
                         .sort(function (a, b) {return b.assists - a.assists;})
                         .map(rows['assist']));
+
+                $('.refresh-button')
+                    .attr('disabled', false)
+                    .find('.last')
+                    .html(new Date().toLocaleTimeString());
             }
         });
     }
 
-    fetch();
+    $('.refresh-button').click(fetch);
+
+    var fetch_loop = function () {
+        fetch();
+        setTimeout(fetch_loop, 60 * 1000);
+    };
+
+    fetch_loop();
 </script>
 @endpush
