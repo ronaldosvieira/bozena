@@ -195,7 +195,7 @@
     <div class="col-lg-offset-1 col-lg-10"><div class="col-lg-6">
         <h3 class="col-xs-12 text-center">Gols</h3>
         <div class="table-responsive">
-            <table class="table table-hover table-striped">
+            <table class="table table-hover table-striped table-goals">
                 <thead>
                 <tr>
                     <th>Jogador</th>
@@ -204,36 +204,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @foreach (DB::table('goal as g')
-                        ->select('g.scorer as name', DB::raw('CASE WHEN g.team = \'HOME\' THEN hpt.team ELSE apt.team END'), DB::raw('count(*) as goals'))
-                        ->leftJoin('match as m', 'm.id', '=', 'g.match_id')
-                        ->leftJoin('player_tournament as hpt', function ($join) {
-                            $join->on('hpt.player_id', '=', 'm.home_player_id')
-                                ->where('hpt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
-                        })
-                        ->leftJoin('player_tournament as apt', function ($join) {
-                            $join->on('apt.player_id', '=', 'm.home_player_id')
-                                ->where('apt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
-                        })
-                        ->where('m.tournament_id', '=', $tournament->id)
-                        ->groupBy('g.scorer', 'g.team', 'hpt.team', 'apt.team')
-                        ->get()
-                        ->groupBy('name')
-                        ->map(function ($goals) {
-                            return $goals->reduce(function($carry, $goal) {
-                                if ($carry) $carry->goals += $goal->goals;
-                                else $carry = $goal;
 
-                                return $carry;
-                            });
-                        })
-                        ->sortByDesc('goals') as $scorer)
-                        <tr>
-                            <td>{{ $scorer->name }}</td>
-                            <td>{{ $scorer->team }}</td>
-                            <td>{{ $scorer->goals }}</td>
-                        </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -241,7 +212,7 @@
     <div class="col-lg-6">
         <h3 class="col-xs-12 text-center">Assistências</h3>
         <div class="table-responsive">
-            <table class="table table-hover table-striped">
+            <table class="table table-hover table-striped table-assists">
                 <thead>
                 <tr>
                     <th>Jogador</th>
@@ -250,39 +221,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (DB::table('goal as g')
-                        ->select('g.assister as name',
-                            DB::raw('CASE WHEN g.team = \'HOME\' THEN hpt.team ELSE apt.team END'),
-                            DB::raw('count(*) as assists'))
-                        ->leftJoin('match as m', 'm.id', '=', 'g.match_id')
-                        ->leftJoin('player_tournament as hpt', function ($join) {
-                            $join->on('hpt.player_id', '=', 'm.home_player_id')
-                                ->where('hpt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
-                        })
-                        ->leftJoin('player_tournament as apt', function ($join) {
-                            $join->on('apt.player_id', '=', 'm.home_player_id')
-                                ->where('apt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
-                        })
-                        ->where('m.tournament_id', '=', $tournament->id)
-                        ->whereNotNull('g.assister')
-                        ->groupBy('g.assister', 'g.team', 'hpt.team', 'apt.team')
-                        ->get()
-                        ->groupBy('name')
-                        ->map(function ($goals) {
-                            return $goals->reduce(function($carry, $goal) {
-                                if ($carry) $carry->assists += $goal->assists;
-                                else $carry = $goal;
 
-                                return $carry;
-                            });
-                        })
-                        ->sortByDesc('assists') as $assister)
-                    <tr>
-                        <td>{{ $assister->name }}</td>
-                        <td>{{ $assister->team }}</td>
-                        <td>{{ $assister->assists }}</td>
-                    </tr>
-                @endforeach
                 </tbody>
             </table>
         </div>
@@ -314,5 +253,53 @@
             return confirm('Deseja realmente terminar a partida?');
         });
     });
+
+    var rows = {
+        standing: function(player) {},
+        week: function(week) {},
+        goal: function(info) {
+            return $('<tr>')
+                .append($('<td>', {text: info.name}))
+                .append($('<td>', {text: info.team}))
+                .append($('<td>', {text: info.goals}));
+        },
+        assist: function(info) {
+            return $('<tr>')
+                .append($('<td>', {text: info.name}))
+                .append($('<td>', {text: info.team}))
+                .append($('<td>', {text: info.assists}));
+        }
+    };
+
+    function fetch() {
+        $.ajax({
+            method: 'POST',
+            url: '{{ route('tournament.fetch', $tournament->id) }}',
+            dataType: 'json',
+            data: {_token: '{{ csrf_token() }}'},
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
+            },
+            success: function(data) {
+                console.log(data);
+
+                $('.table-goals tbody, .table-assists tbody').html('');
+
+                $('.table-goals tbody').append(
+                    data.goals
+                        .sort(function (a, b) {return b.goals - a.goals;})
+                        .map(rows['goal']));
+
+                $('.table-assists tbody').append(
+                    data.assists
+                        .sort(function (a, b) {return b.assists - a.assists;})
+                        .map(rows['assist']));
+            }
+        });
+    }
+
+    fetch();
 </script>
 @endpush
