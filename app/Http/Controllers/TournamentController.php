@@ -286,6 +286,7 @@ class TournamentController extends Controller {
                     return $carry;
                 });
             })
+            ->values()
             /*->sortByDesc('goals')*/;
     }
 
@@ -316,6 +317,7 @@ class TournamentController extends Controller {
                     return $carry;
                 });
             })
+            ->values()
             /*->sortByDesc('assists')*/;
     }
 
