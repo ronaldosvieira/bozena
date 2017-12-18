@@ -153,8 +153,6 @@
                 console.log(errorThrown);
             },
             success: function(data) {
-                console.log(data);
-
                 $('.table-standings tbody, .table-goals tbody, .table-assists tbody').html('');
 
                 $('.table-standings tbody').append(
