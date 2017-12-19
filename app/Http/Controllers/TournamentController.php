@@ -271,7 +271,7 @@ class TournamentController extends Controller {
                     ->where('hpt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
             })
             ->leftJoin('player_tournament as apt', function ($join) {
-                $join->on('apt.player_id', '=', 'm.home_player_id')
+                $join->on('apt.player_id', '=', 'm.away_player_id')
                     ->where('apt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
             })
             ->where('m.tournament_id', '=', $tournament->id)
@@ -301,7 +301,7 @@ class TournamentController extends Controller {
                     ->where('hpt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
             })
             ->leftJoin('player_tournament as apt', function ($join) {
-                $join->on('apt.player_id', '=', 'm.home_player_id')
+                $join->on('apt.player_id', '=', 'm.away_player_id')
                     ->where('apt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
             })
             ->where('m.tournament_id', '=', $tournament->id)
