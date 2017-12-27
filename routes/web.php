@@ -25,7 +25,7 @@ Route::post('tournament/{tournament}/match-start', [
     'uses' => 'MatchController@start'
 ]);
 
-Route::post('tournament/{tournament}/match/{match}/end', [
+Route::post('tournament/{tournament}/match-end', [
     'as' => 'tournament.match.end',
     'uses' => 'MatchController@end'
 ]);

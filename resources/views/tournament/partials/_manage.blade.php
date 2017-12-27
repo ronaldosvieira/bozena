@@ -177,6 +177,24 @@
             .click(function() {
                 if (!confirm('Deseja realmente terminar a partida?'))
                     return;
+
+                var match = $(this).closest('.match');
+
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ route('tournament.match.end', $tournament->id) }}',
+                    data: {_token: '{{ csrf_token() }}', match_id: match.data('match')},
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    },
+                    success: function (data) {
+                        if (!data.success) console.log(data.error);
+
+                        fetch();
+                    }
+                });
             });
     });
 

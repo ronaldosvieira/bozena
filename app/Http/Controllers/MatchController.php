@@ -26,19 +26,20 @@ class MatchController extends Controller {
         return Response::json(['success' => true, 'error' => []], 200);
     }
 
-    public function end(Tournament $tournament, Match $match) {
-        if (!$tournament->exists || !$match->exists) {
-            return Redirect::back()->with('error', 'Partida inválida.');
+    public function end(Tournament $tournament, Request $request) {
+        $match = Match::find($request->get('match_id'));
+
+        if (!$tournament->exists || is_null($match) || !$match->exists) {
+            return Response::json(['success' => false, 'error' => 'Partida inválida'], 200);
         }
 
         if (!$tournament->matches->contains($match)) {
-            return Redirect::back()->with('error', 'Partida inválida.');
+            return Response::json(['success' => false, 'error' => 'Partida inválida'], 200);
         }
 
         $match->end();
 
-        return Redirect::route('tournament.show', $tournament->id)
-            ->with('message', 'Partida ' . $match->homePlayer->name .' x ' . $match->awayPlayer->name .' terminada.');
+        return Response::json(['success' => true, 'error' => []], 200);
     }
 
     public function addGoal(Tournament $tournament, Match $match, Request $request) {
