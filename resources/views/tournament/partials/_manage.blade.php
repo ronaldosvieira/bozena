@@ -153,6 +153,24 @@
             .click(function() {
                 if (!confirm('Deseja realmente iniciar a partida?'))
                     return;
+
+                var match = $(this).closest('.match');
+
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ route('tournament.match.start', $tournament->id) }}',
+                    data: {_token: '{{ csrf_token() }}', match_id: match.data('match')},
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    },
+                    success: function (data) {
+                        if (!data.success) console.log(data.error);
+
+                        fetch();
+                    }
+                });
             });
 
         $('.end-match')
@@ -185,7 +203,8 @@
                 matches.map(function (match, index, matches) {
                     var el2 = $('.match.template').clone(true, true).removeClass('template');
 
-                    el2.data('id', match.id);
+                    el2.attr('data-match', match.id);
+                    el2.attr('data-tournament', '{{ $tournament->id }}');
 
                     el2.find('.match-state').text(match.state);
                     el2.find('.home-team').text(match.home_team);

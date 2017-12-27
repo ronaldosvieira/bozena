@@ -20,7 +20,7 @@ Route::post('tournament/{tournament}/activate', [
     'uses' => 'TournamentController@activate'
 ]);
 
-Route::post('tournament/{tournament}/match/{match}/start', [
+Route::post('tournament/{tournament}/match-start', [
     'as' => 'tournament.match.start',
     'uses' => 'MatchController@start'
 ]);
