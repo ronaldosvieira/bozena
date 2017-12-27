@@ -46,11 +46,38 @@
 <div class="row">
     <div class="col-lg-offset-1 col-lg-10">
         <h3 class="col-xs-12 text-center">Partidas</h3>
-            @each('tournament.partials._week',
-                $tournament->matches->groupBy('week')->sort(), 'matches')
+        <div class="weeks"></div>
     </div>
 </div>
 @endif
+
+<!-- week template -->
+<div class="week template col-xs-12 col-lg-6">
+    <div class="row">
+        <h4 class="col-lg-offset-4 col-lg-4 text-center">
+            <span class="week-num"></span>
+            ª rodada
+        </h4>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-matches table-striped table-condensed no-margin">
+                <!-- match template -->
+                <tr class="match template" data-match="" data-tournament="">
+                    <td class="col-xs-2 match-state"></td>
+                    <td class="col-xs-3 home-team text-right"></td>
+                    <td class="col-xs-1 text-center">
+                        <span class="score score-home"></span>
+                        x
+                        <span class="score score-away"></span>
+                    </td>
+                    <td class="col-xs-3 away-team text-left"></td>
+                    <td class="col-xs-2 actions"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 
 <div class="row voffset">
     <div class="col-lg-offset-1 col-lg-10"><div class="col-lg-6">
@@ -93,6 +120,17 @@
 
 @push('js')
 <script>
+    if (!Object.entries)
+        Object.entries = function( obj ){
+            var ownProps = Object.keys( obj ),
+                i = ownProps.length,
+                resArray = new Array(i); // preallocate the Array
+            while (i--)
+                resArray[i] = [ownProps[i], obj[ownProps[i]]];
+
+            return resArray;
+        };
+
     $(document).ready(function() {
         $('.start-match, .end-match').click(function() {
             $(this).closest('form').submit();
@@ -177,8 +215,8 @@
                 console.log(textStatus);
                 console.log(errorThrown);
             },
-            success: function(data) {
-                $('.table-standings tbody, .table-goals tbody, .table-assists tbody').html('');
+            success: function(data) {console.log(data);
+                $('.table-standings tbody, .weeks, .table-goals tbody, .table-assists tbody').html('');
 
                 $('.table-standings tbody').append(
                     data.players
@@ -192,6 +230,10 @@
                             return res;
                         })
                         .map(rows['standing']));
+
+                $('.weeks').append(
+                    Object.entries(data.matches)
+                        .map(rows['week']));
 
                 $('.table-goals tbody').append(
                     data.goals
