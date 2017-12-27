@@ -61,23 +61,25 @@
     </div>
     <div class="row">
         <div class="table-responsive">
-            <table class="table table-matches table-striped table-condensed no-margin">
-                <!-- match template -->
-                <tr class="match template" data-match="" data-tournament="">
-                    <td class="col-xs-2 match-state"></td>
-                    <td class="col-xs-3 home-team text-right"></td>
-                    <td class="col-xs-1 text-center">
-                        <span class="score score-home"></span>
-                        x
-                        <span class="score score-away"></span>
-                    </td>
-                    <td class="col-xs-3 away-team text-left"></td>
-                    <td class="col-xs-2 actions"></td>
-                </tr>
-            </table>
+            <table class="table table-matches table-striped table-condensed no-margin"></table>
         </div>
     </div>
 </div>
+
+<!-- match template -->
+<table>
+    <tr class="match template" data-match="" data-tournament="">
+        <td class="col-xs-2 match-state"></td>
+        <td class="col-xs-3 home-team text-right"></td>
+        <td class="col-xs-1 text-center">
+            <span class="score score-home"></span>
+            x
+            <span class="score score-away"></span>
+        </td>
+        <td class="col-xs-3 away-team text-left"></td>
+        <td class="col-xs-2 actions"></td>
+    </tr>
+</table>
 
 <div class="row voffset">
     <div class="col-lg-offset-1 col-lg-10"><div class="col-lg-6">
@@ -183,8 +185,6 @@
                 }));
 
             el.find('.week-num').text(week_num);
-
-            el.remove('.match.template');
 
             return el;
         },
