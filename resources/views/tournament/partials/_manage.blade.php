@@ -77,7 +77,22 @@
             <span class="score score-away"></span>
         </td>
         <td class="col-xs-3 away-team text-left"></td>
-        <td class="col-xs-2 actions"></td>
+        <td class="col-xs-2 actions">
+            <a class="acao start-match">
+                <i class="fa fa-play" data-toggle="tooltip"
+                   data-placement="bottom" title="Iniciar partida"></i>
+            </a>
+
+            <a class="acao add-goal" data-toggle="modal" data-target="#goal-modal">
+                <i class="fa fa-soccer-ball-o" data-toggle="tooltip"
+                   data-placement="bottom" title="Adicionar gol"></i>
+            </a>
+
+            <a class="acao end-match">
+                <i class="fa fa-hand-paper-o" data-toggle="tooltip"
+                   data-placement="bottom" title="Terminar partida"></i>
+            </a>
+        </td>
     </tr>
 </table>
 
@@ -134,17 +149,17 @@
         };
 
     $(document).ready(function() {
-        $('.start-match, .end-match').click(function() {
-            $(this).closest('form').submit();
-        });
+        $('.start-match')
+            .click(function() {
+                if (!confirm('Deseja realmente iniciar a partida?'))
+                    return;
+            });
 
-        $('.start-match-form').on('submit', function() {
-            return confirm('Deseja realmente iniciar a partida?');
-        });
-
-        $('.end-match-form').on('submit', function() {
-            return confirm('Deseja realmente terminar a partida?');
-        });
+        $('.end-match')
+            .click(function() {
+                if (!confirm('Deseja realmente terminar a partida?'))
+                    return;
+            });
     });
 
     var rows = {
@@ -164,11 +179,11 @@
             var week_num = entry[0];
             var matches = entry[1];
 
-            var el = $('.week.template').clone().removeClass('template');
+            var el = $('.week.template').clone(true, true).removeClass('template');
 
             el.find('.table-matches').append(
                 matches.map(function (match, index, matches) {
-                    var el2 = $('.match.template').clone().removeClass('template');
+                    var el2 = $('.match.template').clone(true, true).removeClass('template');
 
                     el2.data('id', match.id);
 
@@ -180,6 +195,11 @@
                         el2.find('.score-home').text(match.home_score);
                         el2.find('.score-away').text(match.away_score);
                     }
+
+                    if (match.can_add_goals)
+                        el2.find('.acao.start-match').remove();
+                    else if (!match.is_done)
+                        el2.find('.acao.end-match, .acao.add-goal').remove();
 
                     return el2;
                 }));
