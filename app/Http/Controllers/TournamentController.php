@@ -257,7 +257,33 @@ class TournamentController extends Controller {
     }
 
     private function fetchMatches(Tournament $tournament) {
-        return $tournament->matches->load('state')->groupBy('week')->sort();
+        return DB::table('match as m')
+            ->select('m.id as id', 'm.week as week_num',
+                'ms.name as state', 'ms.can_add_goals as can_add_goals',
+                'ms.is_done as is_done', 'ms.is_started as is_started',
+                'hpt.team as home_team', 'apt.team as away_team',
+                DB::raw('(' . DB::table('goal as g')
+                    ->select(DB::raw('count(*)'))
+                    ->whereColumn('g.match_id', 'm.id')
+                    ->whereRaw('g.team = \'HOME\'')
+                    ->toSql() . ') as home_score'),
+                DB::raw('(' . DB::table('goal as g')
+                    ->select(DB::raw('count(*)'))
+                    ->whereColumn('g.match_id', 'm.id')
+                    ->whereRaw('g.team = \'AWAY\'')
+                    ->toSql() . ') as away_score'))
+            ->leftJoin('match_state as ms', 'm.match_state_id', '=', 'ms.id')
+            ->leftJoin('player_tournament as hpt', function ($join) {
+                $join->on('hpt.player_id', '=', 'm.home_player_id')
+                    ->where('hpt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
+            })
+            ->leftJoin('player_tournament as apt', function ($join) {
+                $join->on('apt.player_id', '=', 'm.away_player_id')
+                    ->where('apt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
+            })
+            ->where('m.tournament_id', $tournament->id)
+            ->get()
+            ->groupBy('week_num');
     }
 
     private function fetchGoals(Tournament $tournament) {
