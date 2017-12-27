@@ -120,7 +120,36 @@
                 .append($('<td>', {class: "text-center ", text: player.goal_diff}))
                 .append($('<td>', {class: "text-center ", text: player.points}));
         },
-        week: function(week) {},
+        week: function(entry) {
+            var week_num = entry[0];
+            var matches = entry[1];
+
+            var el = $('.week.template').clone().removeClass('template');
+
+            el.find('.table-matches').append(
+                matches.map(function (match, index, matches) {
+                    var el2 = $('.match.template').clone().removeClass('template');
+
+                    el2.data('id', match.id);
+
+                    el2.find('.match-state').text(match.state);
+                    el2.find('.home-team').text(match.home_team);
+                    el2.find('.away-team').text(match.away_team);
+
+                    if (match.is_started) {
+                        el2.find('.score-home').text(match.home_score);
+                        el2.find('.score-away').text(match.away_score);
+                    }
+
+                    return el2;
+                }));
+
+            el.find('.week-num').text(week_num);
+
+            el.remove('.match.template');
+
+            return el;
+        },
         goal: function(info) {
             return $('<tr>')
                 .append($('<td>', {text: info.name}))
