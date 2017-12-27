@@ -219,6 +219,8 @@
                         el2.find('.acao.start-match').remove();
                     else if (!match.is_done)
                         el2.find('.acao.end-match, .acao.add-goal').remove();
+                    else
+                        el2.find('.acao').remove();
 
                     return el2;
                 }));
