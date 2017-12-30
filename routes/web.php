@@ -30,7 +30,7 @@ Route::post('tournament/{tournament}/match-end', [
     'uses' => 'MatchController@end'
 ]);
 
-Route::post('tournament/{tournament}/match/{match}/goal/add', [
+Route::post('tournament/{tournament}/match-goal-add', [
     'as' => 'tournament.match.goal.store',
     'uses' => 'MatchController@addGoal'
 ]);

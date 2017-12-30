@@ -83,7 +83,7 @@
                    data-placement="bottom" title="Iniciar partida"></i>
             </a>
 
-            <a class="acao add-goal" data-toggle="modal" data-target="#goal-modal">
+            <a class="acao add-goal">
                 <i class="fa fa-soccer-ball-o" data-toggle="tooltip"
                    data-placement="bottom" title="Adicionar gol"></i>
             </a>
@@ -95,6 +95,8 @@
         </td>
     </tr>
 </table>
+
+@include('tournament.partials._goal_modal')
 
 <div class="row voffset">
     <div class="col-lg-offset-1 col-lg-10"><div class="col-lg-6">
@@ -149,6 +151,71 @@
         };
 
     $(document).ready(function() {
+        $('#goal-modal input, #goal-modal select')
+            .change(function() {
+                $('#goal-modal .form-group').removeClass('has-error');
+            });
+
+        $('.add-goal')
+            .click(function() {
+                var match = $(this).closest('.match');
+                var goal_modal = $('#goal-modal');
+
+                goal_modal.find('.home-team-modal').text(match.find('.home-team').text());
+                goal_modal.find('.away-team-modal').text(match.find('.away-team').text());
+
+                goal_modal.find('#match_id').val(match.data('match'));
+                goal_modal.find('#team').val('').change();
+                goal_modal.find('#scorer').val('');
+                goal_modal.find('#assister').val('');
+
+                goal_modal.modal('show');
+            });
+
+        $('.add-goal-submit')
+            .click(function() {
+                var goal_modal = $('#goal-modal');
+                var data = {
+                    match_id: goal_modal.find('#match_id').val(),
+                    team: goal_modal.find('#team').val(),
+                    scorer: goal_modal.find('#scorer').val(),
+                    assister: goal_modal.find('#assister').val()
+                };
+
+                if (!data.team || ['HOME', 'AWAY'].indexOf(data.team) === -1) {
+                    goal_modal.find('#team').closest('.form-group').addClass('has-error');
+                    return;
+                }
+
+                if (!data.scorer) {
+                    goal_modal.find('#scorer').closest('.form-group').addClass('has-error');
+                    return;
+                }
+
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ route('tournament.match.goal.store', $tournament->id) }}',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        match_id: data.match_id,
+                        team: data.team,
+                        scorer: data.scorer,
+                        assister: data.assister
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    },
+                    success: function (data) {
+                        if (!data.success) console.log(data.error);
+
+                        fetch();
+                        goal_modal.modal('hide');
+                    }
+                });
+            });
+
         $('.start-match')
             .click(function() {
                 if (!confirm('Deseja realmente iniciar a partida?'))
