@@ -169,7 +169,49 @@
                 goal_modal.find('#scorer').val('');
                 goal_modal.find('#assister').val('');
 
+                goal_modal.find('#current-goals-list').text("Carregando...");
+
                 goal_modal.modal('show');
+
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ route('tournament.match.goal.fetch', $tournament->id) }}',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        match_id: match.data('match')
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    },
+                    success: function (data) {
+                        if (!data.success) console.log(data.error);
+
+                        console.log(data);
+
+                        var new_row = function (goal) {
+                            var row = $('.goal-listed.template').clone().removeClass('template');
+
+                            row.find('.team').text(goal.team);
+                            row.find('.scorer').text(goal.scorer);
+                            if (goal.assister) row.find('.assister .inner').text(goal.assister);
+                            else row.find('.assister .outer').hide();
+
+                            return row;
+                        };
+
+                        var current_goals_list = goal_modal.find('#current-goals-list');
+                        var goals = data.data;
+
+                        current_goals_list.text('');
+
+                        if (goals.length === 0)
+                            current_goals_list.text('Nenhum');
+                        else
+                            current_goals_list.append(goals.map(new_row));
+                    }
+                });
             });
 
         $('.add-goal-submit')

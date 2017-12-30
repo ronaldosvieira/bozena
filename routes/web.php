@@ -35,6 +35,11 @@ Route::post('tournament/{tournament}/match-goal-add', [
     'uses' => 'MatchController@addGoal'
 ]);
 
+Route::post('tournament/{tournament}/match-goal-fetch', [
+    'as' => 'tournament.match.goal.fetch',
+    'uses' => 'MatchController@fetchGoals'
+]);
+
 Route::post('tournament/{tournament}/fetch', [
     'as' => 'tournament.fetch',
     'uses' => 'TournamentController@fetch'

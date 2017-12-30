@@ -11,6 +11,19 @@
                 </h4>
             </div>
             <div class="modal-body">
+                <div class="form-group current-goals">
+                    <label class="control-label col-sm-3 text-right">Gols atuais</label>
+                    <div class="col-sm-8" id="current-goals-list"></div>
+                </div>
+
+                <div class="goal-listed template">
+                    <span class="team"></span>:
+                    <span class="scorer"></span>
+                    <span class="assister outer">
+                        (<span class="assister inner"></span>)
+                    </span>
+                </div>
+
                 <input type="hidden" id="match_id">
 
                 <div class="form-group team-modal">
