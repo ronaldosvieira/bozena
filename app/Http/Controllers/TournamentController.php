@@ -282,6 +282,7 @@ class TournamentController extends Controller {
                     ->where('apt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
             })
             ->where('m.tournament_id', $tournament->id)
+            ->orderBy('m.id')
             ->get()
             ->groupBy('week_num');
     }
