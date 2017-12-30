@@ -198,6 +198,7 @@
                         var new_row = function (goal) {
                             var row = $('.goal-listed.template').clone().removeClass('template');
 
+                            row.attr('data-goal', goal.id);
                             row.find('.team').text(goal.team);
                             row.find('.scorer').text(goal.scorer);
                             if (goal.assister) row.find('.assister-inner').text(goal.assister);
