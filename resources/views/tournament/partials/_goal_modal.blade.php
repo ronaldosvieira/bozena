@@ -1,6 +1,8 @@
 <div class="modal fade goal-modal" id="goal-modal" tabindex="-1" role="dialog" aria-labelledby="goal-modal-label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+            <form class="form-horizontal" id="goal-form">
+
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="goal-modal-label">
@@ -59,7 +61,7 @@
                 <button type="button" class="btn btn-success add-goal-submit">Adicionar gol</button>
             </div>
 
-            {{ Form::close() }}
+            </form>
         </div>
     </div>
 </div>

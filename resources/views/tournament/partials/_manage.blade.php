@@ -151,6 +151,11 @@
         };
 
     $(document).ready(function() {
+        $('#goal-form')
+            .on('submit', function(e) {
+                e.preventDefault();
+            });
+
         $('#goal-modal input, #goal-modal select')
             .change(function() {
                 $('#goal-modal .form-group').removeClass('has-error');
