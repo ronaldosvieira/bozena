@@ -200,8 +200,8 @@
 
                             row.find('.team').text(goal.team);
                             row.find('.scorer').text(goal.scorer);
-                            if (goal.assister) row.find('.assister .inner').text(goal.assister);
-                            else row.find('.assister .outer').hide();
+                            if (goal.assister) row.find('.assister-inner').text(goal.assister);
+                            else row.find('.assister-outer').hide();
 
                             return row;
                         };

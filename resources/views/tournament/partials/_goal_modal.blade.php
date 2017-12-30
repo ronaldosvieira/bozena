@@ -21,8 +21,8 @@
                 <div class="goal-listed template">
                     <span class="team"></span>:
                     <span class="scorer"></span>
-                    <span class="assister outer">
-                        (<span class="assister inner"></span>)
+                    <span class="assister assister-outer">
+                        (<span class="assister assister-inner"></span>)
                     </span>
                 </div>
 
