@@ -20,19 +20,24 @@ Route::post('tournament/{tournament}/activate', [
     'uses' => 'TournamentController@activate'
 ]);
 
-Route::post('tournament/{tournament}/match/{match}/start', [
+Route::post('tournament/{tournament}/match-start', [
     'as' => 'tournament.match.start',
     'uses' => 'MatchController@start'
 ]);
 
-Route::post('tournament/{tournament}/match/{match}/end', [
+Route::post('tournament/{tournament}/match-end', [
     'as' => 'tournament.match.end',
     'uses' => 'MatchController@end'
 ]);
 
-Route::post('tournament/{tournament}/match/{match}/goal/add', [
+Route::post('tournament/{tournament}/match-goal-add', [
     'as' => 'tournament.match.goal.store',
     'uses' => 'MatchController@addGoal'
+]);
+
+Route::post('tournament/{tournament}/match-goal-fetch', [
+    'as' => 'tournament.match.goal.fetch',
+    'uses' => 'MatchController@fetchGoals'
 ]);
 
 Route::post('tournament/{tournament}/fetch', [

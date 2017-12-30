@@ -46,11 +46,57 @@
 <div class="row">
     <div class="col-lg-offset-1 col-lg-10">
         <h3 class="col-xs-12 text-center">Partidas</h3>
-            @each('tournament.partials._week',
-                $tournament->matches->groupBy('week')->sort(), 'matches')
+        <div class="weeks"></div>
     </div>
 </div>
 @endif
+
+<!-- week template -->
+<div class="week template col-xs-12 col-lg-6">
+    <div class="row">
+        <h4 class="col-lg-offset-4 col-lg-4 text-center">
+            <span class="week-num"></span>
+            ª rodada
+        </h4>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-matches table-striped table-condensed no-margin"></table>
+        </div>
+    </div>
+</div>
+
+<!-- match template -->
+<table>
+    <tr class="match template" data-match="" data-tournament="">
+        <td class="col-xs-2 match-state"></td>
+        <td class="col-xs-3 home-team text-right"></td>
+        <td class="col-xs-1 text-center">
+            <span class="score score-home"></span>
+            x
+            <span class="score score-away"></span>
+        </td>
+        <td class="col-xs-3 away-team text-left"></td>
+        <td class="col-xs-2 actions">
+            <a class="acao start-match">
+                <i class="fa fa-play" data-toggle="tooltip"
+                   data-placement="bottom" title="Iniciar partida"></i>
+            </a>
+
+            <a class="acao add-goal">
+                <i class="fa fa-soccer-ball-o" data-toggle="tooltip"
+                   data-placement="bottom" title="Adicionar gol"></i>
+            </a>
+
+            <a class="acao end-match">
+                <i class="fa fa-hand-paper-o" data-toggle="tooltip"
+                   data-placement="bottom" title="Terminar partida"></i>
+            </a>
+        </td>
+    </tr>
+</table>
+
+@include('tournament.partials._goal_modal')
 
 <div class="row voffset">
     <div class="col-lg-offset-1 col-lg-10"><div class="col-lg-6">
@@ -93,18 +139,172 @@
 
 @push('js')
 <script>
+    if (!Object.entries)
+        Object.entries = function( obj ){
+            var ownProps = Object.keys( obj ),
+                i = ownProps.length,
+                resArray = new Array(i); // preallocate the Array
+            while (i--)
+                resArray[i] = [ownProps[i], obj[ownProps[i]]];
+
+            return resArray;
+        };
+
     $(document).ready(function() {
-        $('.start-match, .end-match').click(function() {
-            $(this).closest('form').submit();
-        });
+        $('#goal-modal input, #goal-modal select')
+            .change(function() {
+                $('#goal-modal .form-group').removeClass('has-error');
+            });
 
-        $('.start-match-form').on('submit', function() {
-            return confirm('Deseja realmente iniciar a partida?');
-        });
+        $('.add-goal')
+            .click(function() {
+                var match = $(this).closest('.match');
+                var goal_modal = $('#goal-modal');
 
-        $('.end-match-form').on('submit', function() {
-            return confirm('Deseja realmente terminar a partida?');
-        });
+                goal_modal.find('.home-team-modal').text(match.find('.home-team').text());
+                goal_modal.find('.away-team-modal').text(match.find('.away-team').text());
+
+                goal_modal.find('#match_id').val(match.data('match'));
+                goal_modal.find('#team').val('').change();
+                goal_modal.find('#scorer').val('');
+                goal_modal.find('#assister').val('');
+
+                goal_modal.find('#current-goals-list').text("Carregando...");
+
+                goal_modal.modal('show');
+
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ route('tournament.match.goal.fetch', $tournament->id) }}',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        match_id: match.data('match')
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    },
+                    success: function (data) {
+                        if (!data.success) console.log(data.error);
+
+                        console.log(data);
+
+                        var new_row = function (goal) {
+                            var row = $('.goal-listed.template').clone().removeClass('template');
+
+                            row.find('.team').text(goal.team);
+                            row.find('.scorer').text(goal.scorer);
+                            if (goal.assister) row.find('.assister .inner').text(goal.assister);
+                            else row.find('.assister .outer').hide();
+
+                            return row;
+                        };
+
+                        var current_goals_list = goal_modal.find('#current-goals-list');
+                        var goals = data.data;
+
+                        current_goals_list.text('');
+
+                        if (goals.length === 0)
+                            current_goals_list.text('Nenhum');
+                        else
+                            current_goals_list.append(goals.map(new_row));
+                    }
+                });
+            });
+
+        $('.add-goal-submit')
+            .click(function() {
+                var goal_modal = $('#goal-modal');
+                var data = {
+                    match_id: goal_modal.find('#match_id').val(),
+                    team: goal_modal.find('#team').val(),
+                    scorer: goal_modal.find('#scorer').val(),
+                    assister: goal_modal.find('#assister').val()
+                };
+
+                if (!data.team || ['HOME', 'AWAY'].indexOf(data.team) === -1) {
+                    goal_modal.find('#team').closest('.form-group').addClass('has-error');
+                    return;
+                }
+
+                if (!data.scorer) {
+                    goal_modal.find('#scorer').closest('.form-group').addClass('has-error');
+                    return;
+                }
+
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ route('tournament.match.goal.store', $tournament->id) }}',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        match_id: data.match_id,
+                        team: data.team,
+                        scorer: data.scorer,
+                        assister: data.assister
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    },
+                    success: function (data) {
+                        if (!data.success) console.log(data.error);
+
+                        fetch();
+                        goal_modal.modal('hide');
+                    }
+                });
+            });
+
+        $('.start-match')
+            .click(function() {
+                if (!confirm('Deseja realmente iniciar a partida?'))
+                    return;
+
+                var match = $(this).closest('.match');
+
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ route('tournament.match.start', $tournament->id) }}',
+                    data: {_token: '{{ csrf_token() }}', match_id: match.data('match')},
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    },
+                    success: function (data) {
+                        if (!data.success) console.log(data.error);
+
+                        fetch();
+                    }
+                });
+            });
+
+        $('.end-match')
+            .click(function() {
+                if (!confirm('Deseja realmente terminar a partida?'))
+                    return;
+
+                var match = $(this).closest('.match');
+
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ route('tournament.match.end', $tournament->id) }}',
+                    data: {_token: '{{ csrf_token() }}', match_id: match.data('match')},
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    },
+                    success: function (data) {
+                        if (!data.success) console.log(data.error);
+
+                        fetch();
+                    }
+                });
+            });
     });
 
     var rows = {
@@ -120,7 +320,42 @@
                 .append($('<td>', {class: "text-center ", text: player.goal_diff}))
                 .append($('<td>', {class: "text-center ", text: player.points}));
         },
-        week: function(week) {},
+        week: function(entry) {
+            var week_num = entry[0];
+            var matches = entry[1];
+
+            var el = $('.week.template').clone(true, true).removeClass('template');
+
+            el.find('.table-matches').append(
+                matches.map(function (match, index, matches) {
+                    var el2 = $('.match.template').clone(true, true).removeClass('template');
+
+                    el2.attr('data-match', match.id);
+                    el2.attr('data-tournament', '{{ $tournament->id }}');
+
+                    el2.find('.match-state').text(match.state);
+                    el2.find('.home-team').text(match.home_team);
+                    el2.find('.away-team').text(match.away_team);
+
+                    if (match.is_started) {
+                        el2.find('.score-home').text(match.home_score);
+                        el2.find('.score-away').text(match.away_score);
+                    }
+
+                    if (match.can_add_goals)
+                        el2.find('.acao.start-match').remove();
+                    else if (!match.is_done)
+                        el2.find('.acao.end-match, .acao.add-goal').remove();
+                    else
+                        el2.find('.acao').remove();
+
+                    return el2;
+                }));
+
+            el.find('.week-num').text(week_num);
+
+            return el;
+        },
         goal: function(info) {
             return $('<tr>')
                 .append($('<td>', {text: info.name}))
@@ -148,8 +383,8 @@
                 console.log(textStatus);
                 console.log(errorThrown);
             },
-            success: function(data) {
-                $('.table-standings tbody, .table-goals tbody, .table-assists tbody').html('');
+            success: function(data) {console.log(data);
+                $('.table-standings tbody, .weeks, .table-goals tbody, .table-assists tbody').html('');
 
                 $('.table-standings tbody').append(
                     data.players
@@ -163,6 +398,10 @@
                             return res;
                         })
                         .map(rows['standing']));
+
+                $('.weeks').append(
+                    Object.entries(data.matches)
+                        .map(rows['week']));
 
                 $('.table-goals tbody').append(
                     data.goals
