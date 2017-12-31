@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "~7.0.0",
+        "php": "7.0.0",
         "barryvdh/laravel-ide-helper": "^2.4",
         "doctrine/dbal": "^2.5",
         "jeroennoten/laravel-adminlte": "^1.17",
