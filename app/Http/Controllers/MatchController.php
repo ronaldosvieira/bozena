@@ -6,46 +6,52 @@ use App\Goal;
 use App\Match;
 use App\Tournament;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 
 class MatchController extends Controller {
-    public function start(Tournament $tournament, Match $match) {
-        if (!$tournament->exists || !$match->exists) {
-            return Redirect::back()->with('error', 'Partida inválida.');
+    public function start(Tournament $tournament, Request $request) {
+        $match = Match::find($request->get('match_id'));
+
+        if (!$tournament->exists || is_null($match) || !$match->exists) {
+            return Response::json(['success' => false, 'error' => 'Partida inválida'], 200);
         }
 
         if (!$tournament->matches->contains($match)) {
-            return Redirect::back()->with('error', 'Partida inválida.');
+            return Response::json(['success' => false, 'error' => 'Partida inválida'], 200);
         }
 
         $match->start();
 
-        return Redirect::route('tournament.show', $tournament->id)
-            ->with('message', 'Partida ' . $match->homePlayer->name .' x ' . $match->awayPlayer->name .' iniciada.');
+        return Response::json(['success' => true, 'error' => []], 200);
     }
 
-    public function end(Tournament $tournament, Match $match) {
-        if (!$tournament->exists || !$match->exists) {
-            return Redirect::back()->with('error', 'Partida inválida.');
+    public function end(Tournament $tournament, Request $request) {
+        $match = Match::find($request->get('match_id'));
+
+        if (!$tournament->exists || is_null($match) || !$match->exists) {
+            return Response::json(['success' => false, 'error' => 'Partida inválida'], 200);
         }
 
         if (!$tournament->matches->contains($match)) {
-            return Redirect::back()->with('error', 'Partida inválida.');
+            return Response::json(['success' => false, 'error' => 'Partida inválida'], 200);
         }
 
         $match->end();
 
-        return Redirect::route('tournament.show', $tournament->id)
-            ->with('message', 'Partida ' . $match->homePlayer->name .' x ' . $match->awayPlayer->name .' terminada.');
+        return Response::json(['success' => true, 'error' => []], 200);
     }
 
-    public function addGoal(Tournament $tournament, Match $match, Request $request) {
-        if (!$tournament->exists || !$match->exists || !$match->state->can_add_goals) {
-            return Redirect::back()->with('error', 'Partida inválida.');
+    public function addGoal(Tournament $tournament, Request $request) {
+        $match = Match::find($request->get('match_id'));
+
+        if (!$tournament->exists || is_null($match) || !$match->exists || !$match->state->can_add_goals) {
+            return Response::json(['success' => false, 'error' => 'Partida inválida'], 200);
         }
 
         if (!$tournament->matches->contains($match)) {
-            return Redirect::back()->with('error', 'Partida inválida.');
+            return Response::json(['success' => false, 'error' => 'Partida inválida'], 200);
         }
 
         $this->validate($request, [
@@ -70,8 +76,36 @@ class MatchController extends Controller {
             'assister' => $request->assister?: null
         ]);
 
-        return Redirect::route('tournament.show', $tournament->id)
-            ->with('message', 'Gol da partida ' .
-                $match->homePlayer->name . ' x ' . $match->awayPlayer->name . ' inserido com sucesso.');
+        return Response::json(['success' => true, 'error' => []], 200);
+    }
+
+    public function fetchGoals(Tournament $tournament, Request $request) {
+        $match = Match::find($request->get('match_id'));
+
+        if (!$tournament->exists || is_null($match) || !$match->exists) {
+            return Response::json(['success' => false, 'error' => 'Partida inválida'], 200);
+        }
+
+        if (!$tournament->matches->contains($match)) {
+            return Response::json(['success' => false, 'error' => 'Partida inválida'], 200);
+        }
+
+        $goals = DB::table('goal as g')
+            ->select('g.id as id', 'g.scorer as scorer', 'g.assister as assister',
+                DB::raw('(CASE WHEN g.team = \'HOME\' THEN hpt.team ELSE apt.team END) as team'))
+            ->leftJoin('match as m', 'm.id', '=', 'g.match_id')
+            ->leftJoin('player_tournament as hpt', function ($join) {
+                $join->on('hpt.player_id', '=', 'm.home_player_id')
+                    ->where('hpt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
+            })
+            ->leftJoin('player_tournament as apt', function ($join) {
+                $join->on('apt.player_id', '=', 'm.away_player_id')
+                    ->where('apt.tournament_id', '=', DB::raw('m.tournament_id::integer'));
+            })
+            ->where('g.match_id', $match->id)
+            ->orderBy('g.id')
+            ->get();
+
+        return Response::json(['success' => true, 'error' => [], 'data' => $goals], 200);
     }
 }

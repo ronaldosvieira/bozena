@@ -17,6 +17,15 @@
             <h3 class="box-title">
                 Torneio {{ $tournament->name }}
             </h3>
+
+            @if ($tournament->isActive())
+                <div class="btn btn-xs refresh-button pull-right"
+                    data-toggle="tooltip" title="Atualizar"
+                    data-placement="bottom">
+                    <i class="fa fa-fw fa-refresh"></i>
+                    Atualizado às <span class="last"></span>
+                </div>
+            @endif
         </div>
 
         <div class="box-body">
